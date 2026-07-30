@@ -1,0 +1,414 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Recommendation Result</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:30px 15px;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:28px;
+    padding:40px;
+    color:white;
+    box-shadow:0 12px 40px rgba(0,0,0,0.35);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    color:#2563eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:38px;
+    font-weight:700;
+    margin:0 auto 15px;
+}
+
+.header h1{
+    font-size:34px;
+    margin-bottom:8px;
+}
+
+.header p{
+    color:#dbeafe;
+    font-size:15px;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:22px;
+    padding:24px;
+    margin-bottom:24px;
+}
+
+.card h2{
+    font-size:22px;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+}
+
+.info-item{
+    background:rgba(255,255,255,0.08);
+    border-radius:16px;
+    padding:16px;
+}
+
+.info-item span{
+    display:block;
+    font-size:13px;
+    color:#cbd5e1;
+    margin-bottom:5px;
+}
+
+.info-item strong{
+    font-size:16px;
+}
+
+.recommendation{
+    text-align:center;
+}
+
+.recommendation h3{
+    font-size:18px;
+    color:#cbd5e1;
+    margin-bottom:10px;
+}
+
+.career-name{
+    font-size:34px;
+    font-weight:700;
+    color:#facc15;
+    margin-bottom:15px;
+}
+
+.score{
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.progress{
+    width:100%;
+    height:18px;
+    background:rgba(255,255,255,0.15);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:{{ score|default(85) }}%;
+    height:100%;
+    background:linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+.match-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+}
+
+.match-card{
+    background:rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+    transition:0.25s;
+}
+
+.match-card:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,0.12);
+}
+
+.match-card h4{
+    margin-bottom:10px;
+    font-size:18px;
+}
+
+.match-card .percent{
+    font-size:28px;
+    font-weight:700;
+    color:#93c5fd;
+}
+
+ul{
+    padding-left:20px;
+    line-height:1.9;
+}
+
+.roadmap{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:16px;
+}
+
+.step{
+    background:rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+}
+
+.step .number{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#2563eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 12px;
+    font-weight:700;
+}
+
+.actions{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.btn{
+    flex:1;
+    min-width:220px;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    text-decoration:none;
+    text-align:center;
+}
+
+.btn-primary{
+    background:linear-gradient(90deg,#2563eb,#1d4ed8);
+}
+
+.btn-success{
+    background:linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.footer{
+    text-align:center;
+    margin-top:24px;
+    font-size:13px;
+    color:#cbd5e1;
+}
+
+@media(max-width:768px){
+    .container{
+        padding:24px;
+    }
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .career-name{
+        font-size:28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">AI</div>
+        <h1>AI CAREER GUIDANCE SYSTEM</h1>
+        <p>Your personalized career recommendation report</p>
+    </div>
+
+    <!-- STUDENT DETAILS -->
+    <div class="card">
+        <h2>👤 Student Details</h2>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span>Full Name</span>
+                <strong>{{ name }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Age</span>
+                <strong>{{ age|default('N/A') }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Education Level</span>
+                <strong>{{ education_level|default('N/A') }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Percentage / CGPA</span>
+                <strong>{{ score_value|default('N/A') }}</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RECOMMENDATION -->
+    <div class="card recommendation">
+
+        <h3>🏆 Recommended Career</h3>
+
+        <div class="career-name">{{ career }}</div>
+
+        <div class="score">Suitability Score: <strong>{{ score|default(85) }}%</strong></div>
+
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+
+    </div>
+
+    <!-- TOP MATCHES -->
+    <div class="card">
+
+        <h2>📊 Top Career Matches</h2>
+
+        <div class="match-grid">
+
+            <div class="match-card">
+                <h4>{{ career }}</h4>
+                <div class="percent">{{ score|default(85) }}%</div>
+            </div>
+
+            <div class="match-card">
+                <h4>{{ second_career|default('Software Engineer') }}</h4>
+                <div class="percent">{{ second_score|default(78) }}%</div>
+            </div>
+
+            <div class="match-card">
+                <h4>{{ third_career|default('Data Scientist') }}</h4>
+                <div class="percent">{{ third_score|default(72) }}%</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SKILL GAP -->
+    <div class="card">
+
+        <h2>📌 Skill Improvement Areas</h2>
+
+        <ul>
+            <li>Strengthen problem-solving and analytical skills.</li>
+            <li>Practice communication and presentation skills.</li>
+            <li>Work on project-based learning and portfolio development.</li>
+            <li>Improve technical depth in your chosen career domain.</li>
+        </ul>
+
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="card">
+
+        <h2>🛣️ Recommended Roadmap</h2>
+
+        <div class="roadmap">
+
+            <div class="step">
+                <div class="number">1</div>
+                <h4>Learn</h4>
+                <p>Focus on core subjects and foundational concepts.</p>
+            </div>
+
+            <div class="step">
+                <div class="number">2</div>
+                <h4>Practice</h4>
+                <p>Build projects and solve real-world problems.</p>
+            </div>
+
+            <div class="step">
+                <div class="number">3</div>
+                <h4>Certify</h4>
+                <p>Complete relevant online courses and certifications.</p>
+            </div>
+
+            <div class="step">
+                <div class="number">4</div>
+                <h4>Apply</h4>
+                <p>Prepare resume, LinkedIn profile, and internships/jobs.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="card">
+
+        <h2>📥 Next Actions</h2>
+
+        <div class="actions">
+
+            <a href="/" class="btn btn-primary">🔄 Analyze Again</a>
+
+            <button class="btn btn-success" onclick="window.print()">
+                📄 Download / Print Report
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Generated by <strong>AI Career Guidance System</strong> • Developed by Dushyant Gupta
+    </div>
+
+</div>
+
+</body>
+</html>
+```
